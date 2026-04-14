@@ -11,9 +11,17 @@ class FCMService {
         // must ask user's permission before data can be sent
         await messaging.requestPermission(alert: true, badge: true, sound: true);
 
+        if (kIsWeb){
+            final token = await messaging.getToken(
+                vapidKey: "BIMSQZLs0a2-jtMVfCp_Q22IRuVTV-qAYvrnxKueqJH57PUfZlqjsrEESz3YxZ61jAz6_KZgPe9kxMJGzwC-VOQ" 
+            );
+            debugPrint('$token');
+        }
+
         // listen to messages when app is opened in the foreground
         FirebaseMessaging.onMessage.listen((RemoteMessage message) {
             onData(message);
+            debugPrint('Initial message: ${message}');
         });
 
         // used when app opened in the background
@@ -28,10 +36,12 @@ class FCMService {
             }
     }
 
-    Future<String?> getToken() {
-        // need this key for service to work on web
-        return messaging.getToken(
-            vapidKey: "BIMSQZLs0a2-jtMVfCp_Q22IRuVTV-qAYvrnxKueqJH57PUfZlqjsrEESz3YxZ61jAz6_KZgPe9kxMJGzwC-VOQ" 
-        );
-    }
+    // Future<String?> getToken() async {
+    //     // need this key for service to work on web
+    //     final token = await messaging.getToken(
+    //         vapidKey: "BIMSQZLs0a2-jtMVfCp_Q22IRuVTV-qAYvrnxKueqJH57PUfZlqjsrEESz3YxZ61jAz6_KZgPe9kxMJGzwC-VOQ" 
+    //     );
+        
+    //     debugPrint('Token: $token');
+    // }
 }
